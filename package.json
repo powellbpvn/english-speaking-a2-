@@ -14,10 +14,11 @@
     "postcss": "^8.4.31",
     "tailwindcss": "^3.4.1"
   },
-  "scripts": {
-     "start": "node server.js",
-  "build": "echo 'No build step'"
+ "scripts": {
+  "start": "react-scripts start",
+  "build": "react-scripts build",
+  "server": "node server.js",
+  "dev": "concurrently \"npm run server\" \"npm start\""
+}
 
-
-  }
 }
