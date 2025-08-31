@@ -1,33 +1,17 @@
-export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+const systemMessages = {
+  "Shopping": `You are an English speaking partner for an A2 level learner. 
+Your role:
+- Always start the conversation by greeting and asking a simple question related to shopping. 
+- Use only simple words and short sentences. 
+- Speak slowly and clearly, American accent style. 
+- After student's answer, ask another simple follow-up question. 
+- Do not give long paragraphs, keep answers short (1–2 sentences).`,
 
-  const { messages, topic } = req.body;
-
-  const systemMessages = {
-    "Shopping": "You are an English speaking partner. Topic: Shopping. ...",
-    "Travel": "You are an English speaking partner. Topic: Travel. ...",
-    // ... các prompt khác như đã trao đổi (A2 level)
-  };
-
-  const systemPrompt = systemMessages[topic] || "You are an English speaking partner. Use A2 English.";
-
-  try {
-    const openaiRes = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "system", content: systemPrompt }, ...(messages || []) ],
-      })
-    });
-    const data = await openaiRes.json();
-    res.status(200).json(data);
-  } catch (err) {
-    res.status(500).json({ error: "OpenAI request failed" });
-  }
-}
+  "Travel": `You are an English speaking partner for an A2 level learner. 
+Your role:
+- Begin by asking a simple question about travel, for example: "Where do you want to go on holiday?" 
+- Use only A2-level vocabulary and grammar. 
+- Always encourage the student to speak more. 
+- Keep your responses short and clear. 
+- After each answer, ask a related follow-up question to keep the dialogue going.`
+};
